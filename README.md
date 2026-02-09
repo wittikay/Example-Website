@@ -11,8 +11,11 @@ A responsive, modern landing page demo featuring layered sections, a pop-out nav
 
 ## Structure
 
-- `index.html` – page structure and JavaScript
-- `styles.css` – styling and layout
+- `index.html` – page structure
+- `css/styles.css` – styling and layout
+- `js/main.js` – app entry point
+- `js/nav.js` – navigation interactions
+- `js/ascii.js` – ASCII renderer logic
 
 ## Usage
 
@@ -20,4 +23,4 @@ Open `index.html` in a browser.
 
 ## Notes
 
-If you want to swap the ASCII model, replace the renderer logic in `index.html`.
+If you want to swap the ASCII model or behavior, update `js/ascii.js`.
