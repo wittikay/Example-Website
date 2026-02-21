@@ -19,7 +19,7 @@ A responsive, modern landing page demo featuring layered sections, a pop-out nav
 
 ## Usage
 
-Open `index.html` in a browser.
+Find the live page here: https://wittikay.github.io/Example-Website/
 
 ## Notes
 
