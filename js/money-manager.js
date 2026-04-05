@@ -3,15 +3,7 @@
 (() => {
   "use strict";
 
-  // ─── Utilities ─────────────────────────────────────────────────────────────
-
-  const escHtml = (str) =>
-    String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+   // ─── Utilities ─────────────────────────────────────────────────────────────
 
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -272,8 +264,7 @@
     }
 
     empty.hidden = true;
-    container.innerHTML = "";
-    container.appendChild(empty);
+    container.replaceChildren(empty);
 
     bills.forEach((bill) => {
       const entry = buildBillEntry(bill);
@@ -379,8 +370,7 @@
     }
 
     empty.hidden = true;
-    container.innerHTML = "";
-    container.appendChild(empty);
+    container.replaceChildren(empty);
 
     paydays.forEach((payday) => {
       const entry = buildPaydayEntry(payday);
