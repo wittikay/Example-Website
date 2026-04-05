@@ -1,0 +1,450 @@
+/* ─── Money Manager Styles ───────────────────────────────────────── */
+
+/* Header overrides */
+.mm-header {
+  padding-bottom: 2rem;
+}
+
+.mm-header-inner {
+  padding-bottom: 2rem;
+}
+
+.mm-hero {
+  max-width: 680px;
+  padding-bottom: 1rem;
+}
+
+.mm-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin-bottom: 0.5rem;
+}
+
+.mm-hero p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Logo as link */
+a.logo {
+  text-decoration: none;
+  color: #222;
+}
+
+/* ─── Dashboard ─────────────────────────────────────────────────── */
+.mm-dashboard-section .container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.mm-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.mm-stat-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mm-stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.mm-stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+.mm-stat-income {
+  color: #1a8c4e;
+}
+
+.mm-stat-payday {
+  color: #1a4e8c;
+  font-size: 1.2rem;
+}
+
+/* ─── Upcoming ───────────────────────────────────────────────────── */
+.mm-upcoming h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.mm-upcoming-list {
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.mm-upcoming-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  flex-wrap: wrap;
+}
+
+.mm-upcoming-name {
+  font-weight: 600;
+  flex: 1;
+}
+
+.mm-upcoming-meta {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.mm-upcoming-amount {
+  font-weight: 700;
+  color: #c0392b;
+}
+
+.mm-upcoming-amount--income {
+  color: #1a8c4e;
+}
+
+.mm-upcoming-due-soon {
+  border-left: 4px solid #e67e22;
+}
+
+.mm-upcoming-payday {
+  border-left: 4px solid #1a8c4e;
+}
+
+/* ─── Tabs ───────────────────────────────────────────────────────── */
+.mm-tabs-section {
+  background: #f8f8f8;
+  min-height: 60vh;
+}
+
+.mm-tabs-section .container {
+  padding-top: 2.5rem;
+}
+
+.mm-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0;
+}
+
+.mm-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #666;
+  margin-bottom: -2px;
+  border-radius: 8px 8px 0 0;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.mm-tab:hover {
+  color: var(--text-dark);
+  background: #efefef;
+}
+
+.mm-tab--active {
+  color: var(--text-dark);
+  border-bottom-color: var(--text-dark);
+}
+
+/* ─── Panel ──────────────────────────────────────────────────────── */
+.mm-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mm-panel-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.mm-add-btn {
+  font-size: 0.9rem;
+  padding: 0.55rem 1.25rem;
+}
+
+/* ─── Form Card ──────────────────────────────────────────────────── */
+.mm-form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.mm-form-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.mm-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mm-field--full {
+  grid-column: 1 / -1;
+}
+
+.mm-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.mm-field label span {
+  color: #c0392b;
+}
+
+.mm-field input,
+.mm-field select {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid #d8d8d8;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text-dark);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.mm-field input:focus,
+.mm-field select:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+}
+
+.mm-field input.mm-input-error {
+  border-color: #c0392b;
+}
+
+.mm-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.mm-form-error {
+  margin-top: 0.75rem;
+  color: #c0392b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ─── Entry List ─────────────────────────────────────────────────── */
+.mm-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.mm-entry {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mm-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.mm-entry-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: #f1f1f1;
+}
+
+.mm-entry-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mm-entry-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-dark);
+}
+
+.mm-entry-meta {
+  font-size: 0.83rem;
+  color: #777;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.mm-entry-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mm-entry-amount {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #c0392b;
+}
+
+.mm-entry-amount--income {
+  color: #1a8c4e;
+}
+
+.mm-entry-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.mm-btn-icon {
+  background: #f4f4f4;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+  color: var(--text-dark);
+}
+
+.mm-btn-icon:hover {
+  background: #e8e8e8;
+}
+
+.mm-btn-icon--delete:hover {
+  background: #fde8e8;
+  color: #c0392b;
+}
+
+/* ─── Category Chips ─────────────────────────────────────────────── */
+.mm-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.mm-chip--subscription  { background: #7c5cbf; }
+.mm-chip--utilities     { background: #2980b9; }
+.mm-chip--housing       { background: #16a085; }
+.mm-chip--insurance     { background: #d35400; }
+.mm-chip--transport     { background: #8e44ad; }
+.mm-chip--food          { background: #27ae60; }
+.mm-chip--health        { background: #c0392b; }
+.mm-chip--entertainment { background: #e67e22; }
+.mm-chip--other         { background: #7f8c8d; }
+
+/* ─── Frequency Chips ────────────────────────────────────────────── */
+.mm-chip--monthly   { background: #1a4e8c; }
+.mm-chip--biweekly  { background: #1a6e8c; }
+.mm-chip--weekly    { background: #1a8c6e; }
+
+/* ─── Empty State ────────────────────────────────────────────────── */
+.mm-empty-state {
+  color: #999;
+  font-size: 0.95rem;
+  padding: 1.5rem 0;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────── */
+.mm-footer-link {
+  background: none;
+  border: none;
+  color: #e6e6e6;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.mm-footer-link:hover {
+  color: #fff;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .mm-entry {
+    flex-wrap: wrap;
+  }
+
+  .mm-entry-right {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mm-form-card {
+    padding: 1.25rem;
+  }
+
+  .mm-tabs {
+    gap: 0.25rem;
+  }
+
+  .mm-tab {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+}
