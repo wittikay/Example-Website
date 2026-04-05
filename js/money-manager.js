@@ -51,6 +51,10 @@
   const fmt = (amount) =>
     new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
 
+  // Average weeks/bi-weeks per calendar month (52 weeks / 12 months)
+  const WEEKS_PER_MONTH = 4.333;
+  const BIWEEKS_PER_MONTH = 2.167;
+
   const CATEGORY_ICONS = {
     subscription: "📱",
     utilities: "💡",
@@ -68,6 +72,9 @@
     biweekly: "Bi-weekly",
     weekly: "Weekly",
   };
+
+  const ALLOWED_CATEGORIES = new Set(Object.keys(CATEGORY_ICONS));
+  const ALLOWED_FREQUENCIES = new Set(Object.keys(FREQUENCY_LABELS));
 
   /**
    * Given a payday record, return the next occurrence on or after today.
@@ -140,8 +147,8 @@
     // Monthly income (convert weekly/biweekly to monthly equivalent)
     const monthlyIncome = paydays.reduce((sum, p) => {
       const amt = Number(p.amount);
-      if (p.frequency === "weekly") return sum + amt * 4.33;
-      if (p.frequency === "biweekly") return sum + amt * 2.165;
+      if (p.frequency === "weekly") return sum + amt * WEEKS_PER_MONTH;
+      if (p.frequency === "biweekly") return sum + amt * BIWEEKS_PER_MONTH;
       return sum + amt;
     }, 0);
     document.getElementById("stat-monthly-income").textContent = fmt(monthlyIncome);
@@ -210,38 +217,44 @@
     items.sort((a, b) => a.date - b.date);
 
     if (items.length === 0) {
-      list.innerHTML = '<li class="mm-empty-state">No upcoming items this month.</li>';
+      list.replaceChildren();
+      const li = document.createElement("li");
+      li.className = "mm-empty-state";
+      li.textContent = "No upcoming items this month.";
+      list.appendChild(li);
       return;
     }
 
-    list.innerHTML = items
-      .map((item) => {
+    list.replaceChildren(
+      ...items.map((item) => {
         const dueSoon = item.type === "bill" && item.daysUntil <= 7;
-        const classes = [
+        const li = document.createElement("li");
+        li.className = [
           "mm-upcoming-item",
           item.type === "payday" ? "mm-upcoming-payday" : dueSoon ? "mm-upcoming-due-soon" : "",
         ]
           .filter(Boolean)
           .join(" ");
 
-        const amountClass =
-          item.type === "payday" ? "mm-upcoming-amount mm-upcoming-amount--income" : "mm-upcoming-amount";
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "mm-upcoming-name";
+        nameSpan.textContent = item.name;
 
-        const prefix = item.type === "payday" ? "+" : "-";
         const dueMeta =
-          item.daysUntil === 0
-            ? "Today"
-            : item.daysUntil === 1
-            ? "Tomorrow"
-            : `In ${item.daysUntil} days`;
+          item.daysUntil === 0 ? "Today" : item.daysUntil === 1 ? "Tomorrow" : `In ${item.daysUntil} days`;
+        const metaSpan = document.createElement("span");
+        metaSpan.className = "mm-upcoming-meta";
+        metaSpan.textContent = `${fmtDate(item.date)} \u2022 ${dueMeta}`;
 
-        return `<li class="${classes}">
-          <span class="mm-upcoming-name">${escHtml(item.name)}</span>
-          <span class="mm-upcoming-meta">${fmtDate(item.date)} &bull; ${dueMeta}</span>
-          <span class="${amountClass}">${prefix}${fmt(item.amount)}</span>
-        </li>`;
+        const amountSpan = document.createElement("span");
+        amountSpan.className =
+          item.type === "payday" ? "mm-upcoming-amount mm-upcoming-amount--income" : "mm-upcoming-amount";
+        amountSpan.textContent = `${item.type === "payday" ? "+" : "-"}${fmt(item.amount)}`;
+
+        li.append(nameSpan, metaSpan, amountSpan);
+        return li;
       })
-      .join("");
+    );
   };
 
   // ─── Bills List ────────────────────────────────────────────────────────────
@@ -275,27 +288,71 @@
     const el = document.createElement("div");
     el.className = "mm-entry";
     el.dataset.id = bill.id;
-    el.innerHTML = `
-      <div class="mm-entry-icon">${icon}</div>
-      <div class="mm-entry-body">
-        <div class="mm-entry-name">${escHtml(bill.name)}</div>
-        <div class="mm-entry-meta">
-          <span>Due ${ordinal(bill.dueDay)} of each month</span>
-          <span>Next: ${fmtDate(nextDate)}</span>
-          <span class="mm-chip mm-chip--${bill.category}">${escHtml(capitalize(bill.category))}</span>
-          ${bill.notes ? `<span>${escHtml(bill.notes)}</span>` : ""}
-        </div>
-      </div>
-      <div class="mm-entry-right">
-        <span class="mm-entry-amount">-${fmt(bill.amount)}/mo</span>
-        <div class="mm-entry-actions">
-          <button class="mm-btn-icon mm-btn-icon--edit" title="Edit" aria-label="Edit ${escHtml(bill.name)}">✏️</button>
-          <button class="mm-btn-icon mm-btn-icon--delete" title="Delete" aria-label="Delete ${escHtml(bill.name)}">🗑️</button>
-        </div>
-      </div>`;
 
-    el.querySelector(".mm-btn-icon--edit").addEventListener("click", () => openEditBill(bill));
-    el.querySelector(".mm-btn-icon--delete").addEventListener("click", () => deleteBill(bill.id));
+    // Icon
+    const iconEl = document.createElement("div");
+    iconEl.className = "mm-entry-icon";
+    iconEl.textContent = icon;
+
+    // Body
+    const bodyEl = document.createElement("div");
+    bodyEl.className = "mm-entry-body";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "mm-entry-name";
+    nameEl.textContent = bill.name;
+
+    const metaEl = document.createElement("div");
+    metaEl.className = "mm-entry-meta";
+
+    const dueSpan = document.createElement("span");
+    dueSpan.textContent = `Due ${ordinal(bill.dueDay)} of each month`;
+
+    const nextSpan = document.createElement("span");
+    nextSpan.textContent = `Next: ${fmtDate(nextDate)}`;
+
+    const chipSpan = document.createElement("span");
+    chipSpan.className = `mm-chip mm-chip--${ALLOWED_CATEGORIES.has(bill.category) ? bill.category : "other"}`;
+    chipSpan.textContent = capitalize(ALLOWED_CATEGORIES.has(bill.category) ? bill.category : "other");
+
+    metaEl.append(dueSpan, nextSpan, chipSpan);
+
+    if (bill.notes) {
+      const notesSpan = document.createElement("span");
+      notesSpan.textContent = bill.notes;
+      metaEl.appendChild(notesSpan);
+    }
+
+    bodyEl.append(nameEl, metaEl);
+
+    // Right
+    const rightEl = document.createElement("div");
+    rightEl.className = "mm-entry-right";
+
+    const amountEl = document.createElement("span");
+    amountEl.className = "mm-entry-amount";
+    amountEl.textContent = `-${fmt(bill.amount)}/mo`;
+
+    const actionsEl = document.createElement("div");
+    actionsEl.className = "mm-entry-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "mm-btn-icon mm-btn-icon--edit";
+    editBtn.title = "Edit";
+    editBtn.setAttribute("aria-label", `Edit ${bill.name}`);
+    editBtn.textContent = "✏️";
+    editBtn.addEventListener("click", () => openEditBill(bill));
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "mm-btn-icon mm-btn-icon--delete";
+    delBtn.title = "Delete";
+    delBtn.setAttribute("aria-label", `Delete ${bill.name}`);
+    delBtn.textContent = "🗑️";
+    delBtn.addEventListener("click", () => deleteBill(bill.id));
+
+    actionsEl.append(editBtn, delBtn);
+    rightEl.append(amountEl, actionsEl);
+    el.append(iconEl, bodyEl, rightEl);
 
     return el;
   };
@@ -337,25 +394,62 @@
     const el = document.createElement("div");
     el.className = "mm-entry";
     el.dataset.id = payday.id;
-    el.innerHTML = `
-      <div class="mm-entry-icon">💰</div>
-      <div class="mm-entry-body">
-        <div class="mm-entry-name">${escHtml(payday.name)}</div>
-        <div class="mm-entry-meta">
-          <span class="mm-chip mm-chip--${payday.frequency}">${FREQUENCY_LABELS[payday.frequency] || payday.frequency}</span>
-          <span>Next: ${fmtDate(next)}</span>
-        </div>
-      </div>
-      <div class="mm-entry-right">
-        <span class="mm-entry-amount mm-entry-amount--income">+${fmt(payday.amount)}</span>
-        <div class="mm-entry-actions">
-          <button class="mm-btn-icon mm-btn-icon--edit" title="Edit" aria-label="Edit ${escHtml(payday.name)}">✏️</button>
-          <button class="mm-btn-icon mm-btn-icon--delete" title="Delete" aria-label="Delete ${escHtml(payday.name)}">🗑️</button>
-        </div>
-      </div>`;
 
-    el.querySelector(".mm-btn-icon--edit").addEventListener("click", () => openEditPayday(payday));
-    el.querySelector(".mm-btn-icon--delete").addEventListener("click", () => deletePayday(payday.id));
+    // Icon
+    const iconEl = document.createElement("div");
+    iconEl.className = "mm-entry-icon";
+    iconEl.textContent = "💰";
+
+    // Body
+    const bodyEl = document.createElement("div");
+    bodyEl.className = "mm-entry-body";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "mm-entry-name";
+    nameEl.textContent = payday.name;
+
+    const metaEl = document.createElement("div");
+    metaEl.className = "mm-entry-meta";
+
+    const freqKey = ALLOWED_FREQUENCIES.has(payday.frequency) ? payday.frequency : "monthly";
+    const chipSpan = document.createElement("span");
+    chipSpan.className = `mm-chip mm-chip--${freqKey}`;
+    chipSpan.textContent = FREQUENCY_LABELS[freqKey] || freqKey;
+
+    const nextSpan = document.createElement("span");
+    nextSpan.textContent = `Next: ${fmtDate(next)}`;
+
+    metaEl.append(chipSpan, nextSpan);
+    bodyEl.append(nameEl, metaEl);
+
+    // Right
+    const rightEl = document.createElement("div");
+    rightEl.className = "mm-entry-right";
+
+    const amountEl = document.createElement("span");
+    amountEl.className = "mm-entry-amount mm-entry-amount--income";
+    amountEl.textContent = `+${fmt(payday.amount)}`;
+
+    const actionsEl = document.createElement("div");
+    actionsEl.className = "mm-entry-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "mm-btn-icon mm-btn-icon--edit";
+    editBtn.title = "Edit";
+    editBtn.setAttribute("aria-label", `Edit ${payday.name}`);
+    editBtn.textContent = "✏️";
+    editBtn.addEventListener("click", () => openEditPayday(payday));
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "mm-btn-icon mm-btn-icon--delete";
+    delBtn.title = "Delete";
+    delBtn.setAttribute("aria-label", `Delete ${payday.name}`);
+    delBtn.textContent = "🗑️";
+    delBtn.addEventListener("click", () => deletePayday(payday.id));
+
+    actionsEl.append(editBtn, delBtn);
+    rightEl.append(amountEl, actionsEl);
+    el.append(iconEl, bodyEl, rightEl);
 
     return el;
   };
