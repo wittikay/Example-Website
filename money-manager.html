@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Money Manager</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/money-manager.css" />
+  </head>
+  <body>
+    <header class="site-header mm-header">
+      <div class="container header-inner mm-header-inner">
+        <div class="header-top">
+          <a href="index.html" class="logo">Example</a>
+          <div class="nav-wrapper">
+            <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+              Menu
+            </button>
+            <nav id="site-nav" class="site-nav" aria-label="Main Navigation">
+              <a href="index.html">Home</a>
+              <a href="money-manager.html" aria-current="page">Money Manager</a>
+            </nav>
+          </div>
+        </div>
+        <div class="mm-hero">
+          <span class="eyebrow">Personal Finance</span>
+          <h1>Money Manager</h1>
+          <p>Track your subscriptions, bills, and paydays — all in one place.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="mm-main">
+      <!-- Summary Dashboard -->
+      <section class="section section--beige mm-dashboard-section">
+        <div class="container">
+          <h2>Overview</h2>
+          <div class="mm-summary-grid">
+            <div class="mm-stat-card">
+              <span class="mm-stat-label">Monthly Bills</span>
+              <span class="mm-stat-value" id="stat-monthly-bills">$0.00</span>
+            </div>
+            <div class="mm-stat-card">
+              <span class="mm-stat-label">Monthly Income</span>
+              <span class="mm-stat-value mm-stat-income" id="stat-monthly-income">$0.00</span>
+            </div>
+            <div class="mm-stat-card">
+              <span class="mm-stat-label">Net Monthly</span>
+              <span class="mm-stat-value" id="stat-net-monthly">$0.00</span>
+            </div>
+            <div class="mm-stat-card">
+              <span class="mm-stat-label">Next Payday</span>
+              <span class="mm-stat-value mm-stat-payday" id="stat-next-payday">—</span>
+            </div>
+          </div>
+
+          <!-- Upcoming This Month -->
+          <div class="mm-upcoming">
+            <h3>Upcoming This Month</h3>
+            <ul class="mm-upcoming-list" id="upcoming-list">
+              <li class="mm-empty-state">No upcoming items.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tabs -->
+      <section class="section mm-tabs-section">
+        <div class="container">
+          <div class="mm-tabs" role="tablist">
+            <button class="mm-tab mm-tab--active" role="tab" aria-selected="true" aria-controls="panel-bills" id="tab-bills">
+              Bills &amp; Subscriptions
+            </button>
+            <button class="mm-tab" role="tab" aria-selected="false" aria-controls="panel-paydays" id="tab-paydays">
+              Paydays
+            </button>
+          </div>
+
+          <!-- Bills Panel -->
+          <div class="mm-panel" id="panel-bills" role="tabpanel" aria-labelledby="tab-bills">
+            <div class="mm-panel-header">
+              <h2>Bills &amp; Subscriptions</h2>
+              <button class="button button--primary mm-add-btn" id="btn-add-bill" type="button">
+                + Add Bill
+              </button>
+            </div>
+
+            <!-- Add Bill Form -->
+            <div class="mm-form-card" id="form-bill" hidden>
+              <h3 id="form-bill-title">Add Bill / Subscription</h3>
+              <form id="bill-form" novalidate>
+                <input type="hidden" id="bill-edit-id" value="" />
+                <div class="mm-form-grid">
+                  <div class="mm-field">
+                    <label for="bill-name">Name <span aria-hidden="true">*</span></label>
+                    <input type="text" id="bill-name" placeholder="e.g. Netflix, Rent, Insurance" required />
+                  </div>
+                  <div class="mm-field">
+                    <label for="bill-amount">Amount ($) <span aria-hidden="true">*</span></label>
+                    <input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01" required />
+                  </div>
+                  <div class="mm-field">
+                    <label for="bill-due-day">Due Day of Month <span aria-hidden="true">*</span></label>
+                    <input type="number" id="bill-due-day" placeholder="1–31" min="1" max="31" required />
+                  </div>
+                  <div class="mm-field">
+                    <label for="bill-category">Category</label>
+                    <select id="bill-category">
+                      <option value="subscription">Subscription</option>
+                      <option value="utilities">Utilities</option>
+                      <option value="housing">Housing</option>
+                      <option value="insurance">Insurance</option>
+                      <option value="transport">Transport</option>
+                      <option value="food">Food</option>
+                      <option value="health">Health</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="mm-field mm-field--full">
+                    <label for="bill-notes">Notes</label>
+                    <input type="text" id="bill-notes" placeholder="Optional note" />
+                  </div>
+                </div>
+                <div class="mm-form-actions">
+                  <button type="submit" class="button button--primary">Save</button>
+                  <button type="button" class="button button--ghost" id="btn-cancel-bill">Cancel</button>
+                </div>
+                <p class="mm-form-error" id="bill-error" role="alert" hidden></p>
+              </form>
+            </div>
+
+            <!-- Bills List -->
+            <div class="mm-list" id="bills-list">
+              <p class="mm-empty-state" id="bills-empty">No bills or subscriptions yet. Add one above!</p>
+            </div>
+          </div>
+
+          <!-- Paydays Panel -->
+          <div class="mm-panel" id="panel-paydays" role="tabpanel" aria-labelledby="tab-paydays" hidden>
+            <div class="mm-panel-header">
+              <h2>Paydays</h2>
+              <button class="button button--primary mm-add-btn" id="btn-add-payday" type="button">
+                + Add Payday
+              </button>
+            </div>
+
+            <!-- Add Payday Form -->
+            <div class="mm-form-card" id="form-payday" hidden>
+              <h3 id="form-payday-title">Add Payday</h3>
+              <form id="payday-form" novalidate>
+                <input type="hidden" id="payday-edit-id" value="" />
+                <div class="mm-form-grid">
+                  <div class="mm-field">
+                    <label for="payday-name">Label <span aria-hidden="true">*</span></label>
+                    <input type="text" id="payday-name" placeholder="e.g. Main Job, Freelance" required />
+                  </div>
+                  <div class="mm-field">
+                    <label for="payday-amount">Amount ($) <span aria-hidden="true">*</span></label>
+                    <input type="number" id="payday-amount" placeholder="0.00" min="0" step="0.01" required />
+                  </div>
+                  <div class="mm-field">
+                    <label for="payday-frequency">Frequency <span aria-hidden="true">*</span></label>
+                    <select id="payday-frequency">
+                      <option value="monthly">Monthly</option>
+                      <option value="biweekly">Bi-weekly</option>
+                      <option value="weekly">Weekly</option>
+                    </select>
+                  </div>
+                  <div class="mm-field">
+                    <label for="payday-next-date">Next Payday Date <span aria-hidden="true">*</span></label>
+                    <input type="date" id="payday-next-date" required />
+                  </div>
+                </div>
+                <div class="mm-form-actions">
+                  <button type="submit" class="button button--primary">Save</button>
+                  <button type="button" class="button button--ghost" id="btn-cancel-payday">Cancel</button>
+                </div>
+                <p class="mm-form-error" id="payday-error" role="alert" hidden></p>
+              </form>
+            </div>
+
+            <!-- Paydays List -->
+            <div class="mm-list" id="paydays-list">
+              <p class="mm-empty-state" id="paydays-empty">No paydays added yet. Add one above!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h4>Money Manager</h4>
+          <ul>
+            <li><a href="money-manager.html">Dashboard</a></li>
+            <li><a href="index.html">Back to Home</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Data</h4>
+          <ul>
+            <li><span style="color:#aaa">Stored locally in your browser</span></li>
+            <li><button class="mm-footer-link" id="btn-clear-all" type="button">Clear all data</button></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/nav.js" defer></script>
+    <script src="js/money-manager.js" defer></script>
+  </body>
+</html>
